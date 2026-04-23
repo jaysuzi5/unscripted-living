@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block title %}{{ category.name }} — Unscripted Living{% endblock %}
+{% block meta_description %}{{ category.description }}{% endblock %}
+
+{% block content %}
+<!-- Category Header -->
+<div class="category-header" style="--cat-color: {{ category.color }};">
+  <div class="container">
+    <div class="d-flex align-items-center gap-3">
+      {% if category.icon %}
+      <div class="category-header-icon">
+        <i class="{{ category.icon }}"></i>
+      </div>
+      {% endif %}
+      <div>
+        <h1 class="category-header-title">{{ category.name }}</h1>
+        {% if category.description %}
+        <p class="category-header-desc">{{ category.description }}</p>
+        {% endif %}
+        <p class="text-muted small mb-0">{{ posts|length }} post{{ posts|length|pluralize }}</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container section-pad">
+  <div class="row g-4 g-lg-5">
+    <div class="col-lg-8">
+      {% if posts %}
+      <div class="row g-4">
+        {% for post in posts %}
+        <div class="col-md-6">
+          {% include "blog/_post_card.html" with post=post %}
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <div class="text-center py-5 text-muted">
+        <i class="bi bi-journal display-3 mb-3 d-block"></i>
+        <h3>No posts yet in {{ category.name }}</h3>
+        <p>Check back soon!</p>
+        <a href="{% url 'home' %}" class="btn btn-primary mt-2">Back to Home</a>
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- Sidebar -->
+    <div class="col-lg-4">
+      <div class="sidebar">
+        <div class="sidebar-widget">
+          <h4 class="sidebar-title">Other Categories</h4>
+          <ul class="list-unstyled category-list">
+            {% for cat in categories %}
+            {% if cat.slug != category.slug %}
+            <li>
+              <a href="{{ cat.get_absolute_url }}" class="category-list-item text-decoration-none"
+                 style="--cat-color: {{ cat.color }};">
+                {% if cat.icon %}<i class="{{ cat.icon }}"></i>{% endif %}
+                {{ cat.name }}
+                <span class="badge ms-auto">{{ cat.published_post_count }}</span>
+              </a>
+            </li>
+            {% endif %}
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

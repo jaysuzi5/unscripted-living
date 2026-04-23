@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Unscripted Living — Life After Work{% endblock %}
+
+{% block content %}
+
+<!-- Hero -->
+<section class="hero-section">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-lg-7">
+        <h1 class="hero-title">Life, Unscripted</h1>
+        <p class="hero-subtitle">
+          Retirement stories, hobbies, and honest thoughts on everything from
+          woodworking to AI — no agenda, just living.
+        </p>
+        <div class="d-flex gap-3 flex-wrap">
+          <a href="{% url 'post_list' %}" class="btn btn-primary btn-lg">Read the Blog</a>
+          <a href="#categories" class="btn btn-outline-secondary btn-lg">Browse Topics</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Categories -->
+<section id="categories" class="section-pad bg-light">
+  <div class="container">
+    <div class="section-header text-center mb-5">
+      <h2 class="section-title">What I Write About</h2>
+      <p class="section-subtitle text-muted">Pick a topic that interests you</p>
+    </div>
+    <div class="row g-4">
+      {% for category in categories %}
+      <div class="col-6 col-md-4 col-lg-3">
+        <a href="{{ category.get_absolute_url }}" class="category-card text-decoration-none">
+          <div class="category-card-inner" style="--cat-color: {{ category.color }};">
+            <div class="category-icon">
+              <i class="{{ category.icon|default:'bi-bookmark' }}"></i>
+            </div>
+            <h3 class="category-name">{{ category.name }}</h3>
+            {% if category.description %}
+            <p class="category-desc">{{ category.description|truncatechars:60 }}</p>
+            {% endif %}
+            <span class="category-count">{{ category.published_post_count }} post{{ category.published_post_count|pluralize }}</span>
+          </div>
+        </a>
+      </div>
+      {% empty %}
+      <div class="col-12 text-center text-muted">
+        <i class="bi bi-pencil-square display-4 mb-3 d-block"></i>
+        <p>Categories coming soon.</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- Featured Posts -->
+{% if featured_posts %}
+<section class="section-pad">
+  <div class="container">
+    <div class="section-header d-flex justify-content-between align-items-center mb-4">
+      <div>
+        <h2 class="section-title mb-1">Featured</h2>
+        <p class="text-muted mb-0">Posts worth reading</p>
+      </div>
+      <a href="{% url 'post_list' %}" class="btn btn-sm btn-outline-primary">All Posts</a>
+    </div>
+    <div class="row g-4">
+      {% for post in featured_posts %}
+      <div class="col-md-6 col-lg-4">
+        {% include "blog/_post_card.html" with post=post %}
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<!-- Recent Posts -->
+{% if recent_posts %}
+<section class="section-pad bg-light">
+  <div class="container">
+    <div class="section-header d-flex justify-content-between align-items-center mb-4">
+      <div>
+        <h2 class="section-title mb-1">Recent Posts</h2>
+        <p class="text-muted mb-0">Fresh off the keyboard</p>
+      </div>
+      <a href="{% url 'post_list' %}" class="btn btn-sm btn-outline-primary">See All</a>
+    </div>
+    <div class="row g-4">
+      {% for post in recent_posts %}
+      <div class="col-md-6 col-lg-4">
+        {% include "blog/_post_card.html" with post=post %}
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<!-- CTA -->
+<section class="cta-section section-pad">
+  <div class="container text-center">
+    {% if not user.is_authenticated %}
+    <h2 class="cta-title">Join the Conversation</h2>
+    <p class="text-muted mb-4">Register for free to leave comments on posts.</p>
+    <a href="{% url 'account_signup' %}" class="btn btn-primary btn-lg">Create Account</a>
+    {% else %}
+    <h2 class="cta-title">Thanks for reading</h2>
+    <p class="text-muted mb-4">Explore all posts or browse by category.</p>
+    <a href="{% url 'post_list' %}" class="btn btn-primary btn-lg">All Posts</a>
+    {% endif %}
+  </div>
+</section>
+
+{% endblock %}

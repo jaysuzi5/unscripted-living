@@ -1,0 +1,109 @@
+# =============================================================================
+# .claudeignore — Template
+# Tells Claude Code which paths to never read.
+# Copy to project root and uncomment / add sections for your stack.
+# =============================================================================
+
+# ----- Universal -----
+.git/
+.DS_Store
+*.log
+*.tmp
+*.swp
+*.swo
+
+# ----- Python -----
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+.eggs/
+dist/
+build/
+.venv/
+venv/
+env/
+ENV/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+htmlcov/
+.coverage
+.coverage.*
+
+# Lock files — large, machine-generated, never useful to read
+uv.lock
+poetry.lock
+Pipfile.lock
+
+# Jupyter
+.ipynb_checkpoints/
+# Uncomment if notebooks have large outputs you don't want Claude reading:
+# *.ipynb
+
+# ----- Node / JavaScript / TypeScript -----
+node_modules/
+.next/
+.nuxt/
+.svelte-kit/
+dist/
+build/
+out/
+.turbo/
+*.tsbuildinfo
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# ----- Go -----
+# vendor/
+
+# ----- Rust -----
+# target/
+
+# ----- C# / .NET -----
+# bin/
+# obj/
+# *.user
+# .vs/
+
+# ----- Databases / large data -----
+*.sqlite
+*.sqlite3
+*.db
+*.db-shm
+*.db-wal
+# Uncomment if you have large fixture/seed files:
+# fixtures/
+# seeds/
+
+# ----- Generated / compiled output -----
+staticfiles/
+static/collected/
+media/
+*.min.js
+*.min.css
+
+# ----- Secrets (should also be in .gitignore) -----
+.env
+.env.*
+*.pem
+*.key
+secrets/
+
+# ----- Test artifacts -----
+test-results/
+coverage/
+junit.xml
+.nyc_output/
+
+# ----- Docker -----
+# docker-compose.override.yml
+
+# ----- Project-specific -----
+.venv/
+staticfiles/
+media/
+uv.lock

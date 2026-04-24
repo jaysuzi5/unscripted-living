@@ -4,6 +4,7 @@ from django.views.generic import ListView
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.contrib import messages
+from django.core.mail import send_mail
 from django.db.models import Q
 import markdown
 import bleach
@@ -85,6 +86,16 @@ class CategoryDetailView(View):
 
 
 class PostDetailView(View):
+    def _related_posts(self, post):
+        if not post.category:
+            return Post.objects.none()
+        return (
+            Post.objects.filter(category=post.category, status=Post.STATUS_PUBLISHED)
+            .exclude(pk=post.pk)
+            .select_related('category', 'author')
+            .order_by('-published_at')[:4]
+        )
+
     def get(self, request, slug):
         post = get_object_or_404(Post, slug=slug, status=Post.STATUS_PUBLISHED)
         comments = post.comments.filter(approved=True).select_related('author')
@@ -99,6 +110,7 @@ class PostDetailView(View):
             'comments': comments,
             'comment_form': comment_form,
             'rendered_content': rendered_content,
+            'related_posts': self._related_posts(post),
         })
 
     @method_decorator(login_required)
@@ -113,10 +125,18 @@ class PostDetailView(View):
             comment.post = post
             comment.author = request.user
             comment.save()
-            messages.success(
-                request,
-                'Your comment has been submitted and is awaiting approval.'
+            send_mail(
+                subject=f'New comment on "{post.title}"',
+                message=(
+                    f'{comment.author.get_full_name() or comment.author.email} commented on '
+                    f'"{post.title}":\n\n{comment.content}\n\n'
+                    f'https://unscripted.jaycurtis.org{post.get_absolute_url()}#comments'
+                ),
+                from_email=None,
+                recipient_list=['jaysuzi5@gmail.com'],
+                fail_silently=True,
             )
+            messages.success(request, 'Your comment has been posted.')
             return redirect(post.get_absolute_url())
 
         comments = post.comments.filter(approved=True).select_related('author')
@@ -126,6 +146,7 @@ class PostDetailView(View):
             'comments': comments,
             'comment_form': form,
             'rendered_content': rendered_content,
+            'related_posts': self._related_posts(post),
         })
 
 

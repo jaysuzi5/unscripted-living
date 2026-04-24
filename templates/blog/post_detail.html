@@ -56,9 +56,9 @@
   </div>
   {% endif %}
 
-  <!-- Post Body -->
+  <!-- Post Body + Sidebar -->
   <div class="container section-pad-sm">
-    <div class="row justify-content-center">
+    <div class="row g-5">
       <div class="col-lg-8">
         <div class="post-body prose">
           {{ rendered_content|safe }}
@@ -111,7 +111,6 @@
                 <button type="submit" class="btn btn-primary">
                   <i class="bi bi-send me-1"></i>Submit Comment
                 </button>
-                <p class="text-muted small mb-0">Comments are reviewed before appearing.</p>
               </div>
             </form>
             {% else %}
@@ -137,7 +136,60 @@
           {% endif %}
         </div>
       </div>
+
+      <!-- Sidebar -->
+      <aside class="col-lg-4">
+        <div class="sidebar">
+          {% if related_posts %}
+          <div class="sidebar-widget">
+            <h6 class="sidebar-title">Related Posts</h6>
+            <div class="d-flex flex-column gap-3">
+              {% for related in related_posts %}
+              <a href="{{ related.get_absolute_url }}" class="text-decoration-none d-flex gap-2 align-items-start">
+                {% if related.featured_image %}
+                <img src="{{ related.featured_image.url }}" alt="{{ related.title }}"
+                     class="rounded flex-shrink-0"
+                     style="width:60px;height:60px;object-fit:cover;">
+                {% endif %}
+                <div>
+                  <p class="fw-semibold small mb-1 lh-sm" style="color:var(--color-text);">{{ related.title|truncatechars:60 }}</p>
+                  <p class="text-muted mb-0" style="font-size:0.75rem;">{{ related.published_at|date:"M j, Y" }}</p>
+                </div>
+              </a>
+              {% endfor %}
+            </div>
+          </div>
+          {% endif %}
+
+          {% if post.category %}
+          <div class="sidebar-widget">
+            <h6 class="sidebar-title">Category</h6>
+            <a href="{{ post.category.get_absolute_url }}" class="category-list-item text-decoration-none"
+               style="--cat-color: {{ post.category.color }};">
+              {% if post.category.icon %}<i class="{{ post.category.icon }}"></i>{% endif %}
+              {{ post.category.name }}
+            </a>
+          </div>
+          {% endif %}
+        </div>
+      </aside>
     </div>
   </div>
 </article>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function () {
+  var bar = document.getElementById('reading-progress');
+  if (!bar) return;
+  bar.style.display = 'block';
+  var update = function () {
+    var total = document.documentElement.scrollHeight - window.innerHeight;
+    if (total > 0) bar.style.width = Math.min(100, (window.scrollY / total) * 100) + '%';
+  };
+  window.addEventListener('scroll', update, { passive: true });
+  update();
+}());
+</script>
 {% endblock %}

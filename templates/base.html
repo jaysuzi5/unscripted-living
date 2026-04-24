@@ -2,6 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <script>(function(){var t=localStorage.getItem('theme')||(window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');if(t==='dark')document.documentElement.setAttribute('data-bs-theme','dark');}());</script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{% block title %}Unscripted Living{% endblock %}</title>
@@ -16,6 +17,8 @@
   {% block extra_css %}{% endblock %}
 </head>
 <body>
+
+  <div id="reading-progress"></div>
 
   <nav class="navbar navbar-expand-lg sticky-top site-navbar">
     <div class="container">
@@ -57,6 +60,9 @@
             <button class="btn btn-outline-secondary" type="submit"><i class="bi bi-search"></i></button>
           </div>
         </form>
+        <button id="theme-toggle" class="btn btn-sm btn-outline-secondary me-1" aria-label="Toggle dark mode" title="Toggle dark mode">
+          <i class="bi bi-moon-fill" id="theme-icon"></i>
+        </button>
         <div class="d-flex align-items-center gap-2">
           {% if user.is_authenticated %}
           <div class="dropdown">
@@ -142,6 +148,27 @@
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var btn = document.getElementById('theme-toggle');
+      var icon = document.getElementById('theme-icon');
+      if (!btn) return;
+
+      function syncIcon() {
+        icon.className = document.documentElement.getAttribute('data-bs-theme') === 'dark'
+          ? 'bi bi-sun-fill' : 'bi bi-moon-fill';
+      }
+
+      syncIcon();
+
+      btn.addEventListener('click', function () {
+        var next = document.documentElement.getAttribute('data-bs-theme') === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-bs-theme', next);
+        localStorage.setItem('theme', next);
+        syncIcon();
+      });
+    });
+  </script>
   {% block extra_js %}{% endblock %}
 </body>
 </html>

@@ -103,11 +103,17 @@ Credentials and secrets are **not** stored here — see k8s SealedSecrets and lo
 - [x] Write a "Welcome" / first post
 - [x] Customize hero text and footer in `base.html`
 
-## Phase 10: Database Backups
+## Phase 10: Database Backups ✅
 
-- [ ] Configure S3 bucket for backups (or NAS)
-- [ ] Create `k8s/cronjob-backup.yaml` (daily + monthly pg_dump)
-- [ ] Apply and verify backup jobs
+- [x] PVC configured (`k8s/backup-pvc.yaml` — 5Gi ReadWriteOnce, staging area)
+- [x] Create `k8s/cronjob-backup.yaml` — 4 CronJobs:
+  - Local pg_dump to PVC every 6 hours (7-day retention)
+  - Daily S3 upload at 2am → `s3://jay-curtis-backup/unscripted-living/backups/daily/YYYY/MM/DD/`
+  - Monthly S3 upload on 1st at 3am → `.../monthly/YYYY/MM/`
+  - Yearly S3 upload on Jan 1st at 4am → `.../yearly/YYYY/`
+- [ ] Apply: `kubectl apply -f k8s/backup-pvc.yaml && kubectl apply -f k8s/cronjob-backup.yaml`
+- [ ] Verify: `kubectl get cronjobs -n unscripted-living`
+- [ ] Test: `kubectl create job --from=cronjob/unscripted-living-backup-local test-backup -n unscripted-living`
 
 ---
 
@@ -119,10 +125,10 @@ Credentials and secrets are **not** stored here — see k8s SealedSecrets and lo
 - [x] RSS feed (`django.contrib.syndication`)
 - [ ] Post newsletter/email notifications
 - [ ] Private/members-only posts (extend Post model with `visibility` field)
-- [ ] Related posts sidebar section
-- [ ] Reading progress indicator on post detail page
-- [ ] Dark mode toggle
-- [ ] Comment notifications for post author
+- [x] Related posts sidebar section
+- [x] Reading progress indicator on post detail page
+- [x] Dark mode toggle
+- [x] Comment notifications for post author (email to jaysuzi5@gmail.com on each comment)
 - [ ] Social share buttons
 - [ ] Post archive page (by year/month)
 - [ ] Photo gallery category with lightbox

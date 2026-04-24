@@ -364,6 +364,71 @@ from the command palette without switching to the Claude Code terminal:
 
 ---
 
+## Email Setup (Gmail SMTP)
+
+This project uses Gmail SMTP for transactional email (comment notifications, test emails).
+
+**Key settings** (in `config/settings.py` production block):
+```python
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'jaysuzi5@gmail.com'
+EMAIL_HOST_PASSWORD = '<16-char app password>'
+DEFAULT_FROM_EMAIL = 'jaysuzi5@gmail.com'
+```
+
+**Important:** `DEFAULT_FROM_EMAIL` must match `EMAIL_HOST_USER` exactly — Gmail rejects mismatched from addresses.
+
+**App Password:** Generate at myaccount.google.com → Security → 2-Step Verification → App passwords. Required when 2FA is enabled. Store in k8s SealedSecret as `email_user` and `email_password`.
+
+**k8s env vars:** `EMAIL_HOST`, `EMAIL_PORT`, `EMAIL_HOST_USER`, `EMAIL_HOST_PASSWORD` — set in `k8s/deployment.yaml`. After adding new env vars, always run `kubectl apply -f k8s/deployment.yaml` first, then `kubectl rollout restart`. A plain `kubectl rollout restart` without a prior `apply` will not pick up new env vars.
+
+**Verify email is working:** Visit `/test-email/` while logged in as staff. Remove that view once confirmed.
+
+---
+
+## Database Backups
+
+Backups use 4 k8s CronJobs defined in `k8s/cronjob-backup.yaml`. The PVC (`k8s/backup-pvc.yaml`, 5Gi RWO) is a local staging area; S3 is the durable store.
+
+| Job | Schedule | What it does |
+|---|---|---|
+| `backup-local` | Every 6h | pg_dump (custom format, compress=9) → PVC, keeps 7 days |
+| `backup-cloud-daily` | 2am daily | Reads latest from PVC → S3 daily path |
+| `backup-cloud-monthly` | 3am on 1st | Reads latest from PVC → S3 monthly path |
+| `backup-cloud-yearly` | 4am on Jan 1st | Reads latest from PVC → S3 yearly path |
+
+**S3 bucket:** `jay-curtis-backup` (same bucket used across all projects, region `us-east-1`, `STANDARD_IA` storage class)
+**S3 prefix:** `unscripted-living/backups/{daily,monthly,yearly}/YYYY/[MM/[DD]]/`
+
+**AWS credentials:** Reuses existing `aws_access_key_id` / `aws_secret_access_key` keys from the `unscripted-living` SealedSecret. Ensure that IAM user has `s3:PutObject` and `s3:ListBucket` on `jay-curtis-backup`.
+
+**Apply:**
+```bash
+kubectl apply -f k8s/backup-pvc.yaml
+kubectl apply -f k8s/cronjob-backup.yaml
+kubectl get cronjobs -n unscripted-living
+```
+
+**Test (triggers local backup immediately):**
+```bash
+kubectl create job --from=cronjob/unscripted-living-backup-local test-local -n unscripted-living
+kubectl logs -n unscripted-living job/test-local -f
+```
+
+**Restore:**
+```bash
+# Download from S3
+aws s3 cp s3://jay-curtis-backup/unscripted-living/backups/daily/YYYY/MM/DD/<file>.dump ./restore.dump
+# Restore into running pod
+kubectl exec -n unscripted-living -it <pod> -- /bin/sh
+pg_restore -h postgresql-rw.postgresql.svc.cluster.local -U $POSTGRES_USER -d $POSTGRES_DB --clean restore.dump
+```
+
+---
+
 ## Common Pitfalls
 
 | Pitfall | Fix |

@@ -55,6 +55,16 @@ spec:
           imagePullPolicy: Always
           ports:
             - containerPort: 8000
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 8000
+              httpHeaders:
+                - name: Host
+                  value: unscripted.jaycurtis.org
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            failureThreshold: 6
           env:
             # Django
             - name: DJANGO_SETTINGS_MODULE
@@ -90,6 +100,28 @@ spec:
                 secretKeyRef:
                   name: unscripted-living
                   key: password
+
+            # S3 Media Storage
+            - name: AWS_STORAGE_BUCKET_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: unscripted-living
+                  key: aws_bucket
+            - name: AWS_S3_REGION_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: unscripted-living
+                  key: aws_region
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: unscripted-living
+                  key: aws_access_key_id
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: unscripted-living
+                  key: aws_secret_access_key
 
             # OpenTelemetry
             - name: OTEL_EXPORTER_OTLP_ENDPOINT

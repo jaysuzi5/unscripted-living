@@ -97,10 +97,26 @@ class Post(models.Model):
             self.published_at = timezone.now()
         super().save(*args, **kwargs)
         if self.featured_image:
-            img = Image.open(self.featured_image.path)
-            if img.width > 512 or img.height > 512:
-                img.thumbnail((512, 512))
-                img.save(self.featured_image.path)
+            try:
+                img = Image.open(self.featured_image.path)
+                if img.width > 512 or img.height > 512:
+                    img.thumbnail((512, 512))
+                    img.save(self.featured_image.path)
+            except NotImplementedError:
+                from io import BytesIO
+                from django.core.files.base import ContentFile
+                storage = self.featured_image.storage
+                name = self.featured_image.name
+                with storage.open(name, 'rb') as f:
+                    img = Image.open(f)
+                    img.load()
+                if img.width > 512 or img.height > 512:
+                    img_format = img.format or 'JPEG'
+                    img.thumbnail((512, 512))
+                    buf = BytesIO()
+                    img.save(buf, format=img_format, quality=85)
+                    buf.seek(0)
+                    storage.save(name, ContentFile(buf.read()))
 
     def get_absolute_url(self):
         from django.urls import reverse

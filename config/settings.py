@@ -156,7 +156,7 @@ if os.getenv('DJANGO_ENV') == 'production':
 else:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
-DEFAULT_FROM_EMAIL = 'noreply@unscripted.jaycurtis.org'
+DEFAULT_FROM_EMAIL = 'jaysuzi5@gmail.com'
 
 MARKDOWNX_MARKDOWN_EXTENSIONS = [
     'fenced_code',

@@ -123,6 +123,22 @@ spec:
                   name: unscripted-living
                   key: aws_secret_access_key
 
+            # Email
+            - name: EMAIL_HOST
+              value: "smtp.gmail.com"
+            - name: EMAIL_PORT
+              value: "587"
+            - name: EMAIL_HOST_USER
+              valueFrom:
+                secretKeyRef:
+                  name: unscripted-living
+                  key: email_user
+            - name: EMAIL_HOST_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: unscripted-living
+                  key: email_password
+
             # OpenTelemetry
             - name: OTEL_EXPORTER_OTLP_ENDPOINT
               value: "http://otel-collector-collector.monitoring.svc.cluster.local:4317"

@@ -1,4 +1,5 @@
 from django.contrib import admin
+from markdownx.admin import MarkdownxModelAdmin
 from .models import Category, Tag, Post, Comment
 
 
@@ -23,7 +24,7 @@ class CommentInline(admin.TabularInline):
 
 
 @admin.register(Post)
-class PostAdmin(admin.ModelAdmin):
+class PostAdmin(MarkdownxModelAdmin):
     list_display = ['title', 'category', 'author', 'status', 'featured', 'published_at', 'approved_comment_count']
     list_filter = ['status', 'category', 'featured', 'created_at']
     list_editable = ['status', 'featured']

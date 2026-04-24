@@ -21,6 +21,25 @@ A personal retirement blog covering hobbies (woodworking, photography, reading, 
 
 ## Local Development
 
+
+## Run Server
+```bash
+uv run python manage.py runserver localhost:8000
+
+```
+
+### Build & Push Multi-Architecture Docker Image
+
+```bash
+docker buildx build --platform linux/amd64,linux/arm64 -t jaysuzi5/unscripted-living:latest --push .
+```
+
+### Redeploy
+```bash
+kubectl rollout restart deployment unscripted-living -n unscripted-living
+```
+
+
 ```bash
 # Install dependencies
 uv sync
@@ -41,6 +60,7 @@ uv run python manage.py runserver
 The dev server connects to the k8s PostgreSQL instance at `192.168.86.201:30004`. See `documents/setup/05_postgres_setup.md` for credentials setup.
 
 ---
+
 
 ## Project Structure
 

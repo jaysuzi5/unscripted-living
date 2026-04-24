@@ -113,7 +113,7 @@ Credentials and secrets are **not** stored here — see k8s SealedSecrets and lo
 
 ## Future Enhancements (Backlog)
 
-- [ ] Rich text / WYSIWYG editor (django-markdownx or TinyMCE)
+- [x] Rich text / WYSIWYG editor (django-markdownx)
 - [ ] Featured image uploads (add S3 storage via django-storages)
 - [ ] Full-text search across posts
 - [ ] RSS feed (`django.contrib.syndication`)

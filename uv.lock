@@ -257,6 +257,20 @@ wheels = [
 ]
 
 [[package]]
+name = "django-markdownx"
+version = "4.0.9"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "django" },
+    { name = "markdown" },
+    { name = "pillow" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/4a/80/e4ff7b93b7518efe7fbe9b18ac5735b53fae943063df6fbef53bc454e045/django-markdownx-4.0.9.tar.gz", hash = "sha256:f82949beaddcaf5cbe765f580b1bf062b3aa5eea94633fdbbb6466514311a907", size = 32649, upload-time = "2025-04-23T12:13:32.864Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/1a/76/53574402650befe1ee7b7bb2ddf49b2862a2a080c8042ff3c853922363bb/django_markdownx-4.0.9-py2.py3-none-any.whl", hash = "sha256:0e78759a8701073fee3e4883764a9bf1cdf3fe4c2941747acbe4f093f9285805", size = 42411, upload-time = "2025-04-23T12:13:31.554Z" },
+]
+
+[[package]]
 name = "googleapis-common-protos"
 version = "1.74.0"
 source = { registry = "https://pypi.org/simple" }
@@ -781,6 +795,7 @@ dependencies = [
     { name = "django" },
     { name = "django-allauth" },
     { name = "django-environ" },
+    { name = "django-markdownx" },
     { name = "gunicorn" },
     { name = "markdown" },
     { name = "opentelemetry-distro" },
@@ -802,6 +817,7 @@ requires-dist = [
     { name = "django", specifier = ">=6.0" },
     { name = "django-allauth", specifier = ">=65.13.1" },
     { name = "django-environ", specifier = ">=0.12.0" },
+    { name = "django-markdownx", specifier = ">=4.0.9" },
     { name = "gunicorn", specifier = ">=20.1" },
     { name = "markdown", specifier = ">=3.7" },
     { name = "opentelemetry-distro", specifier = ">=0.60b1" },

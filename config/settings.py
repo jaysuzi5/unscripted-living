@@ -23,6 +23,7 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
+    'markdownx',
     'blog',
 ]
 
@@ -135,6 +136,14 @@ else:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 DEFAULT_FROM_EMAIL = 'noreply@unscripted.jaycurtis.org'
+
+MARKDOWNX_MARKDOWN_EXTENSIONS = [
+    'fenced_code',
+    'tables',
+    'nl2br',
+    'toc',
+]
+MARKDOWNX_IMAGE_MAX_SIZE = {'size': (1200, 0), 'quality': 85}
 
 LOGGING = {
     'version': 1,

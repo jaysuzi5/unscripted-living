@@ -115,8 +115,8 @@ Credentials and secrets are **not** stored here — see k8s SealedSecrets and lo
 
 - [x] Rich text / WYSIWYG editor (django-markdownx)
 - [x] Featured image uploads (add S3 storage via django-storages)
-- [ ] Full-text search across posts
-- [ ] RSS feed (`django.contrib.syndication`)
+- [x] Full-text search across posts
+- [x] RSS feed (`django.contrib.syndication`)
 - [ ] Post newsletter/email notifications
 - [ ] Private/members-only posts (extend Post model with `visibility` field)
 - [ ] Related posts sidebar section

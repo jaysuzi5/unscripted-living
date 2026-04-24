@@ -4,6 +4,7 @@ from django.views.generic import ListView
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.contrib import messages
+from django.db.models import Q
 import markdown
 import bleach
 
@@ -126,6 +127,28 @@ class PostDetailView(View):
             'comment_form': form,
             'rendered_content': rendered_content,
         })
+
+
+class SearchView(ListView):
+    template_name = 'blog/search_results.html'
+    context_object_name = 'posts'
+    paginate_by = 10
+
+    def get_queryset(self):
+        q = self.request.GET.get('q', '').strip()
+        if not q:
+            return Post.objects.none()
+        return (
+            Post.objects.filter(status=Post.STATUS_PUBLISHED)
+            .filter(Q(title__icontains=q) | Q(summary__icontains=q) | Q(content__icontains=q))
+            .select_related('category', 'author')
+            .order_by('-published_at')
+        )
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx['query'] = self.request.GET.get('q', '').strip()
+        return ctx
 
 
 class TagPostListView(ListView):

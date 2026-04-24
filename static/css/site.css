@@ -95,6 +95,7 @@ body {
    Sections
    ========================================================================== */
 .section-pad { padding: 4rem 0; }
+.section-pad.bg-light { padding: 2rem 0; }
 .section-pad-sm { padding: 3rem 0; }
 
 .section-title {

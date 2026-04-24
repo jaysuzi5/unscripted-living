@@ -28,8 +28,7 @@
 <section id="categories" class="section-pad bg-light">
   <div class="container">
     <div class="section-header text-center mb-5">
-      <h2 class="section-title">What I Write About</h2>
-      <p class="section-subtitle text-muted">Pick a topic that interests you</p>
+      <p class="section-subtitle text-muted">Pick a Topic That Interests You</p>
     </div>
     <div class="row g-4">
       {% for category in categories %}
@@ -85,8 +84,7 @@
   <div class="container">
     <div class="section-header d-flex justify-content-between align-items-center mb-4">
       <div>
-        <h2 class="section-title mb-1">Recent Posts</h2>
-        <p class="text-muted mb-0">Fresh off the keyboard</p>
+        <p class="text-muted mb-0">Recent Posts</p>
       </div>
       <a href="{% url 'post_list' %}" class="btn btn-sm btn-outline-primary">See All</a>
     </div>
@@ -110,7 +108,6 @@
     <a href="{% url 'account_signup' %}" class="btn btn-primary btn-lg">Create Account</a>
     {% else %}
     <h2 class="cta-title">Thanks for reading</h2>
-    <p class="text-muted mb-4">Explore all posts or browse by category.</p>
     <a href="{% url 'post_list' %}" class="btn btn-primary btn-lg">All Posts</a>
     {% endif %}
   </div>

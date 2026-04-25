@@ -163,24 +163,6 @@ class PostDetailView(View):
         })
 
 
-def test_email_view(request):
-    from django.http import HttpResponse
-    from django.core.mail import send_mail
-    if not request.user.is_staff:
-        from django.http import HttpResponseForbidden
-        return HttpResponseForbidden()
-    try:
-        send_mail(
-            subject='Unscripted Living — email test',
-            message='If you received this, email is working correctly.',
-            from_email=None,
-            recipient_list=[request.user.email],
-            fail_silently=False,
-        )
-        return HttpResponse(f'Email sent to {request.user.email}. Check your inbox.')
-    except Exception as e:
-        return HttpResponse(f'Email failed: {e}', status=500)
-
 
 class SearchView(ListView):
     template_name = 'blog/search_results.html'

@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}Server Error — Unscripted Living{% endblock %}
+
+{% block content %}
+<div class="container section-pad">
+  <div class="row justify-content-center">
+    <div class="col-md-6 text-center py-5">
+      <div class="mb-4" style="font-size: 5rem; line-height: 1; color: var(--color-muted);">500</div>
+      <i class="bi bi-exclamation-triangle display-4 text-muted mb-3 d-block"></i>
+      <h1 class="h3 mb-2">Something went wrong</h1>
+      <p class="text-muted mb-4">An unexpected error occurred. Try refreshing the page, or come back in a few minutes.</p>
+      <a href="/" class="btn btn-primary">
+        <i class="bi bi-house me-1"></i>Back to Home
+      </a>
+    </div>
+  </div>
+</div>
+{% endblock %}

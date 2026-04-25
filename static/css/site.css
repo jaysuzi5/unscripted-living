@@ -3,8 +3,9 @@
    Clean, modern personal blog design
    ========================================================================== */
 
-/* Dark mode — applied before stylesheets via inline head script to prevent flash */
-[data-bs-theme="dark"] {
+/* Dark mode — applied before stylesheets via inline head script to prevent flash.
+   Uses :root[data-bs-theme="dark"] (specificity 0,2,0) to beat :root (0,1,0) below. */
+:root[data-bs-theme="dark"] {
   --color-bg: #0f172a;
   --color-surface: #1e293b;
   --color-border: #334155;
@@ -16,18 +17,27 @@
   --shadow-hover: 0 8px 32px rgba(0,0,0,0.4), 0 2px 8px rgba(0,0,0,0.25);
 }
 
-[data-bs-theme="dark"] .site-navbar {
+:root[data-bs-theme="dark"] .site-navbar {
   background: var(--color-surface);
   border-color: var(--color-border);
 }
 
-[data-bs-theme="dark"] .hero-section,
-[data-bs-theme="dark"] .cta-section {
+:root[data-bs-theme="dark"] .hero-section,
+:root[data-bs-theme="dark"] .cta-section {
   background: linear-gradient(135deg, #1e3a5f 0%, #14532d 100%);
   border-color: var(--color-border);
 }
 
-[data-bs-theme="dark"] .auth-divider span { background: var(--color-surface); }
+:root[data-bs-theme="dark"] .auth-divider span { background: var(--color-surface); }
+
+:root[data-bs-theme="dark"] .post-body.prose code {
+  background: #334155;
+  color: #fda4af;
+}
+
+:root[data-bs-theme="dark"] .category-header {
+  background: color-mix(in srgb, var(--cat-color, var(--color-primary)) 12%, #0f172a);
+}
 
 /* Custom properties */
 :root {
@@ -339,7 +349,7 @@ body {
 
 /* Category Detail Header */
 .category-header {
-  background: color-mix(in srgb, var(--cat-color, var(--color-primary)) 8%, white);
+  background: color-mix(in srgb, var(--cat-color, var(--color-primary)) 8%, var(--color-surface));
   border-bottom: 3px solid var(--cat-color, var(--color-primary));
   padding: 3rem 0;
 }
@@ -619,7 +629,7 @@ body {
 
 .auth-divider span {
   position: relative;
-  background: white;
+  background: var(--color-surface);
   padding: 0 0.75rem;
 }
 

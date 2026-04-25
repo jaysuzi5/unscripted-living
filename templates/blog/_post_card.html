@@ -16,6 +16,7 @@
       <a href="{{ post.get_absolute_url }}" class="text-decoration-none text-dark stretched-link">
         {{ post.title }}
       </a>
+      {% if post.visibility == 'members' %}<span class="badge members-badge">Members</span>{% endif %}
     </h3>
     {% if post.summary %}
     <p class="post-card-summary text-muted flex-grow-1">{{ post.summary|truncatechars:120 }}</p>

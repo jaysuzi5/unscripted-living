@@ -140,6 +140,14 @@
           </div>
         </div>
       </div>
+      <div class="footer-subscribe mt-4">
+        <h6 class="footer-heading text-center">Get notified of new posts</h6>
+        <form method="post" action="{% url 'subscribe' %}" class="footer-subscribe-form">
+          {% csrf_token %}
+          <input type="email" name="email" class="form-control form-control-sm" placeholder="your@email.com" required>
+          <button type="submit" class="btn btn-primary btn-sm">Subscribe</button>
+        </form>
+      </div>
       <hr class="footer-divider">
       <div class="d-flex flex-column flex-sm-row justify-content-between align-items-center gap-2">
         <p class="text-muted small mb-0">&copy; {% now "Y" %} Unscripted Living. All rights reserved.</p>

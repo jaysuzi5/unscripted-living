@@ -12,8 +12,15 @@ from django.db.models.functions import TruncMonth
 import markdown
 import bleach
 
-from .models import Category, Post, Tag
+from .models import Category, Post, Tag, NewsletterSubscriber
 from .forms import CommentForm
+
+
+def _visible_posts(request):
+    qs = Post.objects.filter(status=Post.STATUS_PUBLISHED)
+    if not request.user.is_authenticated:
+        qs = qs.filter(visibility=Post.VISIBILITY_PUBLIC)
+    return qs
 
 ALLOWED_TAGS = [
     'p', 'br', 'strong', 'em', 'ul', 'ol', 'li', 'h1', 'h2', 'h3',
@@ -38,11 +45,11 @@ class HomeView(View):
     def get(self, request):
         categories = Category.objects.all()
         featured_posts = (
-            Post.objects.filter(status=Post.STATUS_PUBLISHED, featured=True)
+            _visible_posts(request).filter(featured=True)
             .select_related('category', 'author')[:6]
         )
         recent_posts = (
-            Post.objects.filter(status=Post.STATUS_PUBLISHED)
+            _visible_posts(request)
             .select_related('category', 'author')
             .order_by('-published_at')[:6]
         )
@@ -61,7 +68,7 @@ class PostListView(ListView):
 
     def get_queryset(self):
         return (
-            Post.objects.filter(status=Post.STATUS_PUBLISHED)
+            _visible_posts(self.request)
             .select_related('category', 'author')
             .order_by('-published_at')
         )
@@ -77,7 +84,7 @@ class CategoryDetailView(View):
     def get(self, request, slug):
         category = get_object_or_404(Category, slug=slug)
         posts = (
-            Post.objects.filter(category=category, status=Post.STATUS_PUBLISHED)
+            _visible_posts(request).filter(category=category)
             .select_related('author')
             .order_by('-published_at')
         )
@@ -101,6 +108,9 @@ class PostDetailView(View):
 
     def get(self, request, slug):
         post = get_object_or_404(Post, slug=slug, status=Post.STATUS_PUBLISHED)
+        if post.visibility == Post.VISIBILITY_MEMBERS and not request.user.is_authenticated:
+            from django.contrib.auth.views import redirect_to_login
+            return redirect_to_login(request.get_full_path())
         comments = post.comments.filter(approved=True).select_related('author')
         comment_form = (
             CommentForm()
@@ -182,7 +192,7 @@ class SearchView(ListView):
         if not q:
             return Post.objects.none()
         return (
-            Post.objects.filter(status=Post.STATUS_PUBLISHED)
+            _visible_posts(self.request)
             .filter(Q(title__icontains=q) | Q(summary__icontains=q) | Q(content__icontains=q))
             .select_related('category', 'author')
             .order_by('-published_at')
@@ -197,7 +207,7 @@ class SearchView(ListView):
 class ArchiveView(View):
     def get(self, request):
         monthly = (
-            Post.objects.filter(status=Post.STATUS_PUBLISHED)
+            _visible_posts(request)
             .annotate(month=TruncMonth('published_at'))
             .values('month')
             .annotate(count=Count('id'))
@@ -209,7 +219,7 @@ class ArchiveView(View):
             if year not in years:
                 years[year] = []
             years[year].append({'date': entry['month'], 'count': entry['count']})
-        total = Post.objects.filter(status=Post.STATUS_PUBLISHED).count()
+        total = _visible_posts(request).count()
         return render(request, 'blog/archive.html', {
             'years': sorted(years.items(), reverse=True),
             'total': total,
@@ -223,10 +233,8 @@ class ArchiveYearView(ListView):
 
     def get_queryset(self):
         return (
-            Post.objects.filter(
-                status=Post.STATUS_PUBLISHED,
-                published_at__year=self.kwargs['year'],
-            )
+            _visible_posts(self.request)
+            .filter(published_at__year=self.kwargs['year'])
             .select_related('category', 'author')
             .order_by('-published_at')
         )
@@ -245,8 +253,8 @@ class ArchiveMonthView(ListView):
 
     def get_queryset(self):
         return (
-            Post.objects.filter(
-                status=Post.STATUS_PUBLISHED,
+            _visible_posts(self.request)
+            .filter(
                 published_at__year=self.kwargs['year'],
                 published_at__month=self.kwargs['month'],
             )
@@ -270,7 +278,7 @@ class TagPostListView(ListView):
     def get_queryset(self):
         self.tag = get_object_or_404(Tag, slug=self.kwargs['slug'])
         return (
-            Post.objects.filter(tags=self.tag, status=Post.STATUS_PUBLISHED)
+            _visible_posts(self.request).filter(tags=self.tag)
             .select_related('category', 'author')
             .order_by('-published_at')
         )
@@ -281,3 +289,32 @@ class TagPostListView(ListView):
         ctx['page_title'] = f'Posts tagged: {self.tag.name}'
         ctx['categories'] = Category.objects.all()
         return ctx
+
+
+class SubscribeView(View):
+    def post(self, request):
+        email = request.POST.get('email', '').strip().lower()
+        if not email:
+            messages.error(request, 'Please enter a valid email address.')
+        else:
+            obj, created = NewsletterSubscriber.objects.get_or_create(
+                email=email,
+                defaults={'is_active': True},
+            )
+            if created:
+                messages.success(request, 'Subscribed! You\'ll get an email when new posts are published.')
+            elif not obj.is_active:
+                obj.is_active = True
+                obj.save(update_fields=['is_active'])
+                messages.success(request, 'Welcome back! You\'ve been re-subscribed.')
+            else:
+                messages.info(request, 'You\'re already subscribed.')
+        return redirect(request.META.get('HTTP_REFERER', '/'))
+
+
+class UnsubscribeView(View):
+    def get(self, request, token):
+        subscriber = get_object_or_404(NewsletterSubscriber, unsubscribe_token=token)
+        subscriber.is_active = False
+        subscriber.save(update_fields=['is_active'])
+        return render(request, 'blog/unsubscribe.html', {'email': subscriber.email})

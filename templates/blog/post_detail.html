@@ -20,7 +20,10 @@
             {{ post.category.name }}
           </a>
           {% endif %}
-          <h1 class="post-detail-title">{{ post.title }}</h1>
+          <h1 class="post-detail-title">
+            {{ post.title }}
+            {% if post.visibility == 'members' %}<span class="badge members-badge ms-2 align-middle">Members</span>{% endif %}
+          </h1>
           {% if post.summary %}
           <p class="post-detail-summary">{{ post.summary }}</p>
           {% endif %}

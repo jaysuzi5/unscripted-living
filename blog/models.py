@@ -1,3 +1,5 @@
+import uuid
+
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.text import slugify
@@ -64,6 +66,13 @@ class Post(models.Model):
         (STATUS_PUBLISHED, 'Published'),
     ]
 
+    VISIBILITY_PUBLIC = 'public'
+    VISIBILITY_MEMBERS = 'members'
+    VISIBILITY_CHOICES = [
+        (VISIBILITY_PUBLIC, 'Public'),
+        (VISIBILITY_MEMBERS, 'Members only'),
+    ]
+
     title = models.CharField(max_length=200)
     slug = models.SlugField(unique=True, max_length=250)
     category = models.ForeignKey(
@@ -79,6 +88,10 @@ class Post(models.Model):
     featured_image = models.ImageField(upload_to='posts/%Y/%m/', blank=True, null=True)
     tags = models.ManyToManyField(Tag, blank=True, related_name='posts')
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default=STATUS_DRAFT)
+    visibility = models.CharField(
+        max_length=20, choices=VISIBILITY_CHOICES, default=VISIBILITY_PUBLIC,
+        help_text='Public: visible to all. Members only: requires login.',
+    )
     featured = models.BooleanField(default=False, help_text='Show in featured section on homepage')
     comments_enabled = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -94,6 +107,19 @@ class Post(models.Model):
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.title)
+
+        _send_newsletter = False
+        if self.status == self.STATUS_PUBLISHED:
+            if self.pk:
+                try:
+                    old_status = Post.objects.only('status').get(pk=self.pk).status
+                    if old_status != self.STATUS_PUBLISHED:
+                        _send_newsletter = True
+                except Post.DoesNotExist:
+                    _send_newsletter = True
+            else:
+                _send_newsletter = True
+
         if self.status == self.STATUS_PUBLISHED and not self.published_at:
             self.published_at = timezone.now()
         super().save(*args, **kwargs)
@@ -118,6 +144,9 @@ class Post(models.Model):
                     img.save(buf, format=img_format, quality=85)
                     buf.seek(0)
                     storage.save(name, ContentFile(buf.read()))
+
+        if _send_newsletter:
+            _send_post_newsletter(self)
 
     def get_absolute_url(self):
         from django.urls import reverse
@@ -145,3 +174,41 @@ class Comment(models.Model):
 
     def __str__(self):
         return f'Comment by {self.author} on "{self.post}"'
+
+
+class NewsletterSubscriber(models.Model):
+    email = models.EmailField(unique=True)
+    is_active = models.BooleanField(default=True)
+    subscribed_at = models.DateTimeField(auto_now_add=True)
+    unsubscribe_token = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
+
+    class Meta:
+        ordering = ['-subscribed_at']
+
+    def __str__(self):
+        return self.email
+
+
+def _send_post_newsletter(post):
+    from django.core.mail import send_mail
+    subscribers = NewsletterSubscriber.objects.filter(is_active=True)
+    if not subscribers.exists():
+        return
+    post_url = f'https://unscripted.jaycurtis.org{post.get_absolute_url()}'
+    for subscriber in subscribers:
+        unsub_url = f'https://unscripted.jaycurtis.org/unsubscribe/{subscriber.unsubscribe_token}/'
+        body = f'{post.title}\n\n'
+        if post.summary:
+            body += f'{post.summary}\n\n'
+        if post.visibility == Post.VISIBILITY_MEMBERS:
+            body += f'This post is for members only. Sign in to read:\n{post_url}\n\n'
+        else:
+            body += f'Read the full post:\n{post_url}\n\n'
+        body += f'---\nUnsubscribe: {unsub_url}'
+        send_mail(
+            subject=f'New post: {post.title}',
+            message=body,
+            from_email=None,
+            recipient_list=[subscriber.email],
+            fail_silently=True,
+        )

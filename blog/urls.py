@@ -13,5 +13,7 @@ urlpatterns = [
     path('archive/<int:year>/<int:month>/', views.ArchiveMonthView.as_view(), name='archive_month'),
     path('test-email/', views.test_email_view, name='test_email'),
     path('search/', views.SearchView.as_view(), name='search'),
+    path('subscribe/', views.SubscribeView.as_view(), name='subscribe'),
+    path('unsubscribe/<uuid:token>/', views.UnsubscribeView.as_view(), name='unsubscribe'),
     path('rss/', LatestPostsFeed(), name='rss_feed'),
 ]

@@ -9,7 +9,7 @@ class LatestPostsFeed(Feed):
 
     def items(self):
         return (
-            Post.objects.filter(status=Post.STATUS_PUBLISHED)
+            Post.objects.filter(status=Post.STATUS_PUBLISHED, visibility=Post.VISIBILITY_PUBLIC)
             .select_related('author')
             .order_by('-published_at')[:20]
         )

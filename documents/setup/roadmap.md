@@ -123,8 +123,8 @@ Credentials and secrets are **not** stored here — see k8s SealedSecrets and lo
 - [x] Featured image uploads (add S3 storage via django-storages)
 - [x] Full-text search across posts
 - [x] RSS feed (`django.contrib.syndication`)
-- [ ] Post newsletter/email notifications
-- [ ] Private/members-only posts (extend Post model with `visibility` field)
+- [x] Post newsletter/email notifications
+- [x] Private/members-only posts (extend Post model with `visibility` field)
 - [x] Related posts sidebar section
 - [x] Reading progress indicator on post detail page
 - [x] Dark mode toggle

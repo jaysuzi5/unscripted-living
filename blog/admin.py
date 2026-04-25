@@ -1,6 +1,6 @@
 from django.contrib import admin
 from markdownx.admin import MarkdownxModelAdmin
-from .models import Category, Tag, Post, Comment
+from .models import Category, Tag, Post, Comment, NewsletterSubscriber
 
 
 @admin.register(Category)
@@ -25,9 +25,9 @@ class CommentInline(admin.TabularInline):
 
 @admin.register(Post)
 class PostAdmin(MarkdownxModelAdmin):
-    list_display = ['title', 'category', 'author', 'status', 'featured', 'published_at', 'approved_comment_count']
-    list_filter = ['status', 'category', 'featured', 'created_at']
-    list_editable = ['status', 'featured']
+    list_display = ['title', 'category', 'author', 'status', 'visibility', 'featured', 'published_at', 'approved_comment_count']
+    list_filter = ['status', 'visibility', 'category', 'featured', 'created_at']
+    list_editable = ['status', 'visibility', 'featured']
     search_fields = ['title', 'content', 'summary']
     prepopulated_fields = {'slug': ('title',)}
     filter_horizontal = ['tags']
@@ -44,13 +44,22 @@ class PostAdmin(MarkdownxModelAdmin):
             'fields': ['summary', 'content', 'featured_image'],
         }),
         ('Tags & Options', {
-            'fields': ['tags', 'comments_enabled'],
+            'fields': ['tags', 'comments_enabled', 'visibility'],
         }),
         ('Timestamps', {
             'fields': ['created_at', 'updated_at', 'published_at'],
             'classes': ['collapse'],
         }),
     ]
+
+
+@admin.register(NewsletterSubscriber)
+class NewsletterSubscriberAdmin(admin.ModelAdmin):
+    list_display = ['email', 'is_active', 'subscribed_at']
+    list_filter = ['is_active']
+    list_editable = ['is_active']
+    search_fields = ['email']
+    readonly_fields = ['subscribed_at', 'unsubscribe_token']
 
 
 @admin.register(Comment)

@@ -67,7 +67,7 @@
             {% for cat in categories %}
             <li>
               <a href="{{ cat.get_absolute_url }}" class="category-list-item text-decoration-none"
-                 style="--cat-color: {{ cat.color }};">
+                 {% if cat.color %}style="--cat-color: {{ cat.color }};"{% endif %}>
                 {% if cat.icon %}<i class="{{ cat.icon }}"></i>{% endif %}
                 {{ cat.name }}
                 <span class="badge ms-auto">{{ cat.published_post_count }}</span>

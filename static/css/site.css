@@ -39,6 +39,17 @@
   background: color-mix(in srgb, var(--cat-color, var(--color-primary)) 12%, #0f172a);
 }
 
+/* Bootstrap's bg-light utility does not invert in dark mode — override it */
+:root[data-bs-theme="dark"] .bg-light {
+  background-color: var(--color-surface) !important;
+}
+
+/* Belt-and-suspenders: ensure body background follows our dark token */
+:root[data-bs-theme="dark"] body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+}
+
 /* Custom properties */
 :root {
   --font-body: 'Inter', system-ui, -apple-system, sans-serif;

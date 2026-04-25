@@ -189,7 +189,7 @@
           <div class="sidebar-widget">
             <h6 class="sidebar-title">Category</h6>
             <a href="{{ post.category.get_absolute_url }}" class="category-list-item text-decoration-none"
-               style="--cat-color: {{ post.category.color }};">
+               {% if post.category.color %}style="--cat-color: {{ post.category.color }};"{% endif %}>
               {% if post.category.icon %}<i class="{{ post.category.icon }}"></i>{% endif %}
               {{ post.category.name }}
             </a>

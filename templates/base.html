@@ -121,6 +121,7 @@
           <ul class="list-unstyled footer-links">
             <li><a href="{% url 'home' %}">Home</a></li>
             <li><a href="{% url 'post_list' %}">All Posts</a></li>
+            <li><a href="{% url 'archive' %}">Archive</a></li>
             <li><a href="{% url 'search' %}">Search</a></li>
             <li><a href="{% url 'rss_feed' %}"><i class="bi bi-rss me-1"></i>RSS Feed</a></li>
             {% if not user.is_authenticated %}

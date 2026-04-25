@@ -2,6 +2,9 @@
 
 {% block title %}{{ category.name }} — Unscripted Living{% endblock %}
 {% block meta_description %}{{ category.description }}{% endblock %}
+{% if category.is_gallery %}
+{% block extra_css %}<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css">{% endblock %}
+{% endif %}
 
 {% block content %}
 <!-- Category Header -->
@@ -24,6 +27,36 @@
   </div>
 </div>
 
+{% if category.is_gallery %}
+<!-- Photo Gallery Mode -->
+<div class="container section-pad">
+  {% if posts %}
+  <div class="gallery-grid">
+    {% for post in posts %}
+    {% if post.featured_image %}
+    <a href="{{ post.featured_image.url }}"
+       class="glightbox gallery-item"
+       data-gallery="cat-gallery"
+       data-title="{{ post.title }}"
+       data-description="<a href='{{ post.get_absolute_url }}' style='color:inherit;'>View post →</a>">
+      <img src="{{ post.featured_image.url }}" alt="{{ post.title }}" loading="lazy">
+      <div class="gallery-caption">{{ post.title }}</div>
+    </a>
+    {% endif %}
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="text-center py-5 text-muted">
+    <i class="bi bi-camera display-3 mb-3 d-block"></i>
+    <h3>No photos yet in {{ category.name }}</h3>
+    <p>Check back soon!</p>
+    <a href="{% url 'home' %}" class="btn btn-primary mt-2">Back to Home</a>
+  </div>
+  {% endif %}
+</div>
+
+{% else %}
+<!-- Standard Post List Mode -->
 <div class="container section-pad">
   <div class="row g-4 g-lg-5">
     <div class="col-lg-8">
@@ -69,4 +102,12 @@
     </div>
   </div>
 </div>
+{% endif %}
 {% endblock %}
+
+{% if category.is_gallery %}
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
+<script>GLightbox({ selector: '.glightbox', touchNavigation: true });</script>
+{% endblock %}
+{% endif %}

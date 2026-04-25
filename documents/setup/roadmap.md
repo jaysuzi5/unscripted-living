@@ -129,6 +129,6 @@ Credentials and secrets are **not** stored here — see k8s SealedSecrets and lo
 - [x] Reading progress indicator on post detail page
 - [x] Dark mode toggle
 - [x] Comment notifications for post author (email to jaysuzi5@gmail.com on each comment)
-- [ ] Social share buttons
-- [ ] Post archive page (by year/month)
-- [ ] Photo gallery category with lightbox
+- [x] Social share buttons (X, Facebook, LinkedIn, copy link — on post detail)
+- [x] Post archive page (by year/month) — `/archive/`, `/archive/YYYY/`, `/archive/YYYY/MM/`
+- [x] Photo gallery category with lightbox — enable `is_gallery` on any Category in admin; uses GLightbox; post body images also get lightbox on all post detail pages

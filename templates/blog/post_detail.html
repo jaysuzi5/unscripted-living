@@ -3,6 +3,7 @@
 
 {% block title %}{{ post.title }} — Unscripted Living{% endblock %}
 {% block meta_description %}{{ post.summary|default:post.content|truncatechars:160 }}{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css">{% endblock %}
 
 {% block content %}
 <article class="post-detail">
@@ -64,7 +65,27 @@
           {{ rendered_content|safe }}
         </div>
 
-        <hr class="my-5">
+        <!-- Share -->
+        <div class="post-share d-flex align-items-center flex-wrap gap-2 mt-5">
+          <span class="text-muted small fw-medium me-1">Share:</span>
+          <a href="https://twitter.com/intent/tweet?url={{ request.build_absolute_uri|urlencode }}&text={{ post.title|urlencode }}"
+             target="_blank" rel="noopener" class="btn btn-sm btn-outline-secondary" title="Share on X">
+            <i class="bi bi-twitter-x"></i>
+          </a>
+          <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri|urlencode }}"
+             target="_blank" rel="noopener" class="btn btn-sm btn-outline-secondary" title="Share on Facebook">
+            <i class="bi bi-facebook"></i>
+          </a>
+          <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ request.build_absolute_uri|urlencode }}"
+             target="_blank" rel="noopener" class="btn btn-sm btn-outline-secondary" title="Share on LinkedIn">
+            <i class="bi bi-linkedin"></i>
+          </a>
+          <button class="btn btn-sm btn-outline-secondary" id="copy-link-btn" title="Copy link">
+            <i class="bi bi-link-45deg" id="copy-link-icon"></i>
+          </button>
+        </div>
+
+        <hr class="my-4">
 
         <!-- Comments -->
         <section id="comments" class="comments-section">
@@ -179,17 +200,45 @@
 {% endblock %}
 
 {% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
 <script>
 (function () {
+  // Reading progress bar
   var bar = document.getElementById('reading-progress');
-  if (!bar) return;
-  bar.style.display = 'block';
-  var update = function () {
-    var total = document.documentElement.scrollHeight - window.innerHeight;
-    if (total > 0) bar.style.width = Math.min(100, (window.scrollY / total) * 100) + '%';
-  };
-  window.addEventListener('scroll', update, { passive: true });
-  update();
+  if (bar) {
+    bar.style.display = 'block';
+    var updateBar = function () {
+      var total = document.documentElement.scrollHeight - window.innerHeight;
+      if (total > 0) bar.style.width = Math.min(100, (window.scrollY / total) * 100) + '%';
+    };
+    window.addEventListener('scroll', updateBar, { passive: true });
+    updateBar();
+  }
+
+  // Wrap post body images in glightbox links
+  document.querySelectorAll('.post-body.prose img').forEach(function (img) {
+    if (img.closest('a')) return;
+    var a = document.createElement('a');
+    a.href = img.src;
+    a.className = 'glightbox';
+    a.setAttribute('data-gallery', 'post-gallery');
+    if (img.alt) a.setAttribute('data-description', img.alt);
+    img.parentNode.insertBefore(a, img);
+    a.appendChild(img);
+  });
+  GLightbox({ selector: '.glightbox', touchNavigation: true });
+
+  // Copy link button
+  var copyBtn = document.getElementById('copy-link-btn');
+  var copyIcon = document.getElementById('copy-link-icon');
+  if (copyBtn) {
+    copyBtn.addEventListener('click', function () {
+      navigator.clipboard.writeText(window.location.href).then(function () {
+        copyIcon.className = 'bi bi-check2';
+        setTimeout(function () { copyIcon.className = 'bi bi-link-45deg'; }, 2000);
+      });
+    });
+  }
 }());
 </script>
 {% endblock %}

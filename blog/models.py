@@ -13,6 +13,7 @@ class Category(models.Model):
     icon = models.CharField(max_length=60, blank=True, help_text='Bootstrap Icons class, e.g. bi-camera')
     color = models.CharField(max_length=30, default='#2563eb', help_text='CSS hex color for the category accent')
     order = models.PositiveIntegerField(default=0)
+    is_gallery = models.BooleanField(default=False, help_text='Display posts as a photo gallery grid')
 
     class Meta:
         ordering = ['order', 'name']

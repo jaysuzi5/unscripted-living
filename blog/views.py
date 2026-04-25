@@ -1,3 +1,5 @@
+from datetime import date as date_type
+
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views import View
 from django.views.generic import ListView
@@ -5,7 +7,8 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.contrib import messages
 from django.core.mail import send_mail
-from django.db.models import Q
+from django.db.models import Count, Q
+from django.db.models.functions import TruncMonth
 import markdown
 import bleach
 
@@ -188,6 +191,74 @@ class SearchView(ListView):
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
         ctx['query'] = self.request.GET.get('q', '').strip()
+        return ctx
+
+
+class ArchiveView(View):
+    def get(self, request):
+        monthly = (
+            Post.objects.filter(status=Post.STATUS_PUBLISHED)
+            .annotate(month=TruncMonth('published_at'))
+            .values('month')
+            .annotate(count=Count('id'))
+            .order_by('-month')
+        )
+        years = {}
+        for entry in monthly:
+            year = entry['month'].year
+            if year not in years:
+                years[year] = []
+            years[year].append({'date': entry['month'], 'count': entry['count']})
+        total = Post.objects.filter(status=Post.STATUS_PUBLISHED).count()
+        return render(request, 'blog/archive.html', {
+            'years': sorted(years.items(), reverse=True),
+            'total': total,
+        })
+
+
+class ArchiveYearView(ListView):
+    template_name = 'blog/post_list.html'
+    context_object_name = 'posts'
+    paginate_by = 12
+
+    def get_queryset(self):
+        return (
+            Post.objects.filter(
+                status=Post.STATUS_PUBLISHED,
+                published_at__year=self.kwargs['year'],
+            )
+            .select_related('category', 'author')
+            .order_by('-published_at')
+        )
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx['page_title'] = f"Posts from {self.kwargs['year']}"
+        ctx['categories'] = Category.objects.all()
+        return ctx
+
+
+class ArchiveMonthView(ListView):
+    template_name = 'blog/post_list.html'
+    context_object_name = 'posts'
+    paginate_by = 12
+
+    def get_queryset(self):
+        return (
+            Post.objects.filter(
+                status=Post.STATUS_PUBLISHED,
+                published_at__year=self.kwargs['year'],
+                published_at__month=self.kwargs['month'],
+            )
+            .select_related('category', 'author')
+            .order_by('-published_at')
+        )
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        month_name = date_type(self.kwargs['year'], self.kwargs['month'], 1).strftime('%B %Y')
+        ctx['page_title'] = f"Posts from {month_name}"
+        ctx['categories'] = Category.objects.all()
         return ctx
 
 

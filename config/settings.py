@@ -111,6 +111,7 @@ if _aws_bucket:
     AWS_S3_REGION_NAME = env('AWS_S3_REGION_NAME', default='us-east-1')
     AWS_S3_FILE_OVERWRITE = True
     AWS_S3_OBJECT_PARAMETERS = {'CacheControl': 'max-age=86400'}
+    AWS_QUERYSTRING_AUTH = False
     MEDIA_URL = f'https://{_aws_bucket}.s3.{AWS_S3_REGION_NAME}.amazonaws.com/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

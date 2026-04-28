@@ -1,0 +1,177 @@
+- generic [active] [ref=e1]:
+  - navigation [ref=e2]:
+    - generic [ref=e3]:
+      - link " Unscripted Living" [ref=e4] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e6]: 
+        - text: Unscripted Living
+      - generic [ref=e7]:
+        - list [ref=e8]:
+          - listitem [ref=e9]:
+            - link "Home" [ref=e10] [cursor=pointer]:
+              - /url: /
+          - listitem [ref=e11]:
+            - link "All Posts" [ref=e12] [cursor=pointer]:
+              - /url: /posts/
+          - listitem [ref=e13]:
+            - button "Categories" [ref=e14] [cursor=pointer]
+            - text:       
+        - generic [ref=e16]:
+          - searchbox "Search posts" [ref=e17]
+          - button "" [ref=e18] [cursor=pointer]:
+            - generic [ref=e19]: 
+        - button "Toggle dark mode" [ref=e20] [cursor=pointer]:
+          - generic [ref=e21]: 
+        - generic [ref=e22]:
+          - link "Sign In" [ref=e23] [cursor=pointer]:
+            - /url: /accounts/login/
+          - link "Register" [ref=e24] [cursor=pointer]:
+            - /url: /accounts/signup/
+  - main [ref=e25]:
+    - article [ref=e26]:
+      - generic [ref=e30]:
+        - link " Reading" [ref=e31] [cursor=pointer]:
+          - /url: /category/reading/
+          - generic [ref=e32]: 
+          - text: Reading
+        - heading "Big Haul at AAUW Book Fair" [level=1] [ref=e33]
+        - paragraph [ref=e34]: Had fun at the 64th AAUW Annual Used Book Fair. I felt like a retiree being excited for a book fair.
+        - generic [ref=e35]:
+          - generic [ref=e36]:
+            - generic [ref=e37]: 
+            - text: April 27, 2026
+          - generic [ref=e38]:
+            - generic [ref=e39]: 
+            - text: 1 min read
+      - img "Big Haul at AAUW Book Fair" [ref=e44]
+      - generic [ref=e46]:
+        - generic [ref=e47]:
+          - generic [ref=e48]:
+            - paragraph [ref=e49]: Now that I am retired, I will have plenty of time to read. On Saturday, my wife and I picked up 14 books for $22. A couple of them were on our Amazon Wish List and some of the others were ones that we wanted to read.
+            - paragraph [ref=e50]:
+              - link [ref=e51] [cursor=pointer]:
+                - /url: https://unscripted-living-media.s3.amazonaws.com/markdownx/9f433702-b9a6-44d2-a9eb-b23f1802f6fd.jpg
+                - img [ref=e52]
+            - paragraph [ref=e53]: Today we went back for $10 bag day and picked up another 19 books in one bag.
+            - paragraph [ref=e54]: Overall, we got 33 books for $32.
+            - paragraph [ref=e55]:
+              - link [ref=e56] [cursor=pointer]:
+                - /url: https://unscripted-living-media.s3.amazonaws.com/markdownx/66813fcb-b846-45e1-a399-725450016e80.jpg
+                - img [ref=e57]
+            - paragraph [ref=e58]: "Fun stats:"
+            - list [ref=e59]:
+              - listitem [ref=e60]: $0.97 per book
+              - listitem [ref=e61]: 11918 total pages or average of 361 pages per book
+            - paragraph [ref=e62]: This should keep us busy for a long time. We do like to use our local library and some of these books can be found there, but you can't beat under $1 a book and helping out a good cause - they raise money for college expenses for local girls. We will donate these back next year after reading them.
+          - generic [ref=e63]:
+            - generic [ref=e64]: "Share:"
+            - link "" [ref=e65] [cursor=pointer]:
+              - /url: https://twitter.com/intent/tweet?url=http%3A//unscripted.jaycurtis.org/post/big-haul-at-aauw-book-fair/&text=Big%20Haul%20at%20AAUW%20Book%20Fair
+              - generic [ref=e66]: 
+            - link "" [ref=e67] [cursor=pointer]:
+              - /url: https://www.facebook.com/sharer/sharer.php?u=http%3A//unscripted.jaycurtis.org/post/big-haul-at-aauw-book-fair/
+              - generic [ref=e68]: 
+            - link "" [ref=e69] [cursor=pointer]:
+              - /url: https://www.linkedin.com/sharing/share-offsite/?url=http%3A//unscripted.jaycurtis.org/post/big-haul-at-aauw-book-fair/
+              - generic [ref=e70]: 
+            - button "" [ref=e71] [cursor=pointer]:
+              - generic [ref=e72]: 
+          - separator [ref=e73]
+          - generic [ref=e74]:
+            - heading " 0 Comments" [level=2] [ref=e75]:
+              - generic [ref=e76]: 
+              - text: 0 Comments
+            - paragraph [ref=e77]: No comments yet. Be the first!
+            - generic [ref=e79]:
+              - generic [ref=e80]: 
+              - link "Sign in" [ref=e81] [cursor=pointer]:
+                - /url: /accounts/login/
+              - text: or
+              - link "create an account" [ref=e82] [cursor=pointer]:
+                - /url: /accounts/signup/
+              - text: to leave a comment.
+          - generic [ref=e83]:
+            - link " All Posts" [ref=e84] [cursor=pointer]:
+              - /url: /posts/
+              - generic [ref=e85]: 
+              - text: All Posts
+            - link "More in Reading" [ref=e86] [cursor=pointer]:
+              - /url: /category/reading/
+        - complementary [ref=e87]:
+          - generic [ref=e89]:
+            - heading "Category" [level=6] [ref=e90]
+            - link " Reading" [ref=e91] [cursor=pointer]:
+              - /url: /category/reading/
+              - generic [ref=e92]: 
+              - text: Reading
+  - contentinfo [ref=e93]:
+    - generic [ref=e94]:
+      - generic [ref=e95]:
+        - generic [ref=e96]:
+          - heading " Unscripted Living" [level=5] [ref=e97]:
+            - generic [ref=e98]: 
+            - text: Unscripted Living
+          - paragraph [ref=e99]: A retirement blog covering woodworking, photography, reading, guitar, technology, and random thoughts on life.
+        - generic [ref=e100]:
+          - heading "Quick Links" [level=6] [ref=e101]
+          - list [ref=e102]:
+            - listitem [ref=e103]:
+              - link "Home" [ref=e104] [cursor=pointer]:
+                - /url: /
+            - listitem [ref=e105]:
+              - link "All Posts" [ref=e106] [cursor=pointer]:
+                - /url: /posts/
+            - listitem [ref=e107]:
+              - link "Archive" [ref=e108] [cursor=pointer]:
+                - /url: /archive/
+            - listitem [ref=e109]:
+              - link "Search" [ref=e110] [cursor=pointer]:
+                - /url: /search/
+            - listitem [ref=e111]:
+              - link " RSS Feed" [ref=e112] [cursor=pointer]:
+                - /url: /rss/
+                - generic [ref=e113]: 
+                - text: RSS Feed
+            - listitem [ref=e114]:
+              - link "Register" [ref=e115] [cursor=pointer]:
+                - /url: /accounts/signup/
+        - generic [ref=e116]:
+          - heading "Categories" [level=6] [ref=e117]
+          - generic [ref=e118]:
+            - link " Computers & IT" [ref=e119] [cursor=pointer]:
+              - /url: /category/computers-it/
+              - generic [ref=e120]: 
+              - text: Computers & IT
+            - link " Daily Life" [ref=e121] [cursor=pointer]:
+              - /url: /category/daily-life/
+              - generic [ref=e122]: 
+              - text: Daily Life
+            - link " Financial" [ref=e123] [cursor=pointer]:
+              - /url: /category/financial/
+              - generic [ref=e124]: 
+              - text: Financial
+            - link " Guitar" [ref=e125] [cursor=pointer]:
+              - /url: /category/guitar/
+              - generic [ref=e126]: 
+              - text: Guitar
+            - link " Photography" [ref=e127] [cursor=pointer]:
+              - /url: /category/photography/
+              - generic [ref=e128]: 
+              - text: Photography
+            - link " Reading" [ref=e129] [cursor=pointer]:
+              - /url: /category/reading/
+              - generic [ref=e130]: 
+              - text: Reading
+            - link " Woodworking" [ref=e131] [cursor=pointer]:
+              - /url: /category/woodworking/
+              - generic [ref=e132]: 
+              - text: Woodworking
+      - generic [ref=e133]:
+        - heading "Get notified of new posts" [level=6] [ref=e134]
+        - generic [ref=e135]:
+          - textbox "your@email.com" [ref=e136]
+          - button "Subscribe" [ref=e137] [cursor=pointer]
+      - separator [ref=e138]
+      - generic [ref=e139]:
+        - paragraph [ref=e140]: © 2026 Unscripted Living. All rights reserved.
+        - paragraph [ref=e141]: Built with Django & Bootstrap

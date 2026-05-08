@@ -37,7 +37,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'allauth.account.middleware.AccountMiddleware',
-    'config.middleware.RequestLoggingMiddleware',
+    'config.middleware.PageLoggingMiddleware',
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -154,6 +154,7 @@ if os.getenv('DJANGO_ENV') == 'production':
     CSRF_COOKIE_SECURE = True
     SECURE_HSTS_SECONDS = 31536000
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')  # trust Cloudflare so allauth builds https:// redirect URIs
 else:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
@@ -185,6 +186,11 @@ LOGGING = {
         'unscripted': {
             'handlers': ['console'],
             'level': env('LOG_LEVEL', default='INFO'),
+            'propagate': False,
+        },
+        'page': {
+            'handlers': ['console'],
+            'level': 'INFO',
             'propagate': False,
         },
         'django': {

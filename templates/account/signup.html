@@ -1,9 +1,10 @@
 {% extends "account/base.html" %}
-{% load allauth %}
+{% load allauth socialaccount %}
 
 {% block title %}Create Account — Unscripted Living{% endblock %}
 
 {% block body %}
+{% get_providers as socialaccount_providers %}
 <div class="auth-card card shadow-sm border-0">
   <div class="card-body p-4">
     <div class="text-center mb-4">

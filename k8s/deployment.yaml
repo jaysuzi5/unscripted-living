@@ -140,16 +140,10 @@ spec:
                   key: email_password
 
             # OpenTelemetry
-            - name: OTEL_EXPORTER_OTLP_ENDPOINT
-              value: "http://otel-collector-collector.monitoring.svc.cluster.local:4317"
+            - name: OTLP_ENDPOINT
+              value: "http://otel-collector-collector.monitoring.svc.cluster.local:4318"
             - name: OTEL_SERVICE_NAME
               value: "unscripted-living"
-            - name: OTEL_RESOURCE_ATTRIBUTES
-              value: "service.name=unscripted-living"
-            - name: OTEL_EXPORTER_OTLP_PROTOCOL
-              value: "grpc"
-            - name: OTEL_LOG_LEVEL
-              value: "INFO"
 ---
 apiVersion: v1
 kind: Service
